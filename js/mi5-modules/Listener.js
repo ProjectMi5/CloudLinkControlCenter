@@ -2,17 +2,25 @@
  *
  * @type {*|exports|module.exports}
  */
-
+/** requires module: ./../../config.js */
 var config = require('./../../config.js');
 var validStatus = config.order.validStatus;
+/** requires module: ./rest */
 var rest = require('./rest');
+/** requires module: moment */
 var moment = require('moment');
 
-
+/**@function listenerInit
+ * @constructor
+ */
 function init(){
 
 }
 
+/** Prototype to define Listener
+ * @memberof init
+ * @function Listen
+ */
 init.prototype.Listen = function(){
 	$("body").on('click', ".SetOrderStatusBtn", function(){
 		var orderId = $(this).attr('name');
