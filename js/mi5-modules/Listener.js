@@ -33,6 +33,7 @@ init.prototype.Listen = function(){
 			.catch(function(err){
 				console.log(err);
 			});
+		
 
 		
 		//.each(function(){
@@ -46,6 +47,25 @@ init.prototype.Listen = function(){
 			//	alert(ret);
 		
 	});
+	$("body").on('click', ".multipleSetOrderStatusBtn", function() {
+		var status = $(this).text();
+        var selectedOrders = $('#orderTable').bootstrapTable('getSelections');
+
+        selectedOrders.forEach(function(order){
+            console.log(order.status);
+            console.log(order.orderId);
+		    rest.updateOrderStatus(order.orderId, status)
+			    .then(function (ret) {
+				    swal("status: " + ret.status, ret.description, "success");
+	    		})
+		    	.catch(function (err) {
+			    	console.log(err);
+			});
+        });
+
+        //uncheck selected Orders
+        $('#orderTable').bootstrapTable('uncheckAll');
+	});	
 };
 
 module.exports = new init();

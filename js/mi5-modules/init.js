@@ -12,6 +12,7 @@ var moment = require('moment');
 /** requires module: fs */
 var fs = require('fs');
 var update;
+var selections = []
 
 /**@function init
  * @constructor
@@ -46,11 +47,27 @@ init.prototype.initFields = function(){
 	validStatus.forEach(function(item){
 		var id = 'CheckStatus'+item.replace(/\s+/g, '');
 		global.$('#CheckStatus').append('<input type="checkbox" id="'+id+'" checked>'+item+'</input>  ');
+
 	});
-	
+
+	$('#chosableStatusesMulti').empty();
+	validStatus.forEach(function(el){
+		var input = '<li><a href="#" class="multipleSetOrderStatusBtn" >'+el+'</a></li>';
+		console.log(input);
+		$('#chosableStatusesMulti').prepend(input);
+	});
+
+
 	global.$('#orderTable').bootstrapTable({
 		idField: 'orderId',
+		clickToSelect: 'true',
 		columns: [{
+			field: 'state',
+			checkbox: true,
+			align: 'center',
+			valign: 'middle'
+		},
+			{
 			field: 'orderId',
 			title: 'orderId',
 			sortable: 'true',
@@ -84,9 +101,24 @@ init.prototype.initFields = function(){
 			title: 'remaining time',
 			sortable: 'true'
 		}],
-		url: './../data/orders.json'
-	}); 
+		url: './../data/orders.json',
+		responseHandler: responseHandler
+	});
 };
+function responseHandler(res) {
+	var selectedObjectIds = getSelectedIds()
+	for(var i=0; i< res.length;i++){
+		res[i].state = selectedObjectIds.indexOf(res[i].orderId) !== -1;
+	}
+	return res;
+}
+
+function getSelectedIds() {
+	return $.map($('#orderTable').bootstrapTable('getSelections'), function (row) {
+		return row.orderId
+	});
+}
+
 
 /** Prototype to initialize Modal Table (Bootstrap)
  * @memberof init
@@ -148,6 +180,11 @@ init.prototype.initModal = function(order){
 		console.log(input);
 		$('#chosableStatuses').prepend(input);
 	});
+
+
+
+
+
 	
 /* 	rest.getCocktailDataByOrderId(el.orderId)
 		.then(function(ret){

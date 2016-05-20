@@ -31,7 +31,7 @@ function init(){
 			
 			rest.getOrdersByStatus('done')
 				.then(function(ret){
-					console.log(ret);
+				//	console.log(ret);
 				});
 				
 			global.$('#orderTable').on('click-row.bs.table', function(row, el){
@@ -40,6 +40,9 @@ function init(){
 				init.initModal(el);
 
 			});
+		$("#refreshTable").click(function() {
+			$('#orderTable').bootstrapTable('refresh', {silent:true});
+		});
             console.log(moment(new Date(2015, 8, 9, 10, 22)).format());
 			window.setInterval(function(){
 				init.update();
